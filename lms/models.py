@@ -1,5 +1,7 @@
 from django.db import models
-from users.models import User, NULLABLE
+
+from lms.utils import NULLABLE
+from users.models import User
 
 
 class Course(models.Model):
