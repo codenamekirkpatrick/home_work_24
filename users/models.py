@@ -36,7 +36,6 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
 
 
-
 from lms.models import Course, Lesson
 
 
