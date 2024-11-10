@@ -43,14 +43,23 @@ class Payment(models.Model):
     """Модель платежей"""
 
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name="Кто произвел оплату"
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Кто произвел оплату",
+        related_name="payment",
     )
     date = models.DateField(verbose_name="Дата оплаты", **NULLABLE)
     course = models.ForeignKey(
-        Course, on_delete=models.CASCADE, verbose_name="Оплаченный курс"
+        Course,
+        on_delete=models.CASCADE,
+        verbose_name="Оплаченный курс",
+        related_name="payment",
     )
     lesson = models.ForeignKey(
-        Lesson, on_delete=models.CASCADE, verbose_name="Оплаченный урок"
+        Lesson,
+        on_delete=models.CASCADE,
+        verbose_name="Оплаченный урок",
+        related_name="payment",
     )
     amount = models.PositiveIntegerField(default=0, verbose_name="Сумма оплаты")
     CASH = "cash"
