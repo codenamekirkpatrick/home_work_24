@@ -32,5 +32,38 @@ class User(AbstractUser):
         return f"{self.email}"
 
     class Meta:
-        verbose_name = "пользователь"
-        verbose_name_plural = "пользователи"
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
+
+
+
+from lms.models import Course, Lesson
+
+
+class Payment(models.Model):
+    """Модель платежей"""
+
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="Кто произвел оплату"
+    )
+    date = models.DateField(verbose_name="Дата оплаты", **NULLABLE)
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, verbose_name="Оплаченный курс"
+    )
+    lesson = models.ForeignKey(
+        Lesson, on_delete=models.CASCADE, verbose_name="Оплаченный урок"
+    )
+    amount = models.PositiveIntegerField(default=0, verbose_name="Сумма оплаты")
+    CASH = "cash"
+    TRANSFER = "transfer"
+    PAYMENT_METHOD = [(CASH, "cash"), (TRANSFER, "transfer")]
+    method = models.CharField(
+        choices=PAYMENT_METHOD, default=CASH, verbose_name="Способ оплаты"
+    )
+
+    def __str__(self):
+        return f"{self.amount} {self.method}"
+
+    class Meta:
+        verbose_name = "Платеж"
+        verbose_name_plural = "Платежи"

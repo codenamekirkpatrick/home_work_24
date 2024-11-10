@@ -25,7 +25,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # packets
     "rest_framework",
+    "django_filters",
+    # apps
     "users",
     "lms",
 ]
@@ -63,6 +66,12 @@ TEMPLATES = [
 
 
 WSGI_APPLICATION = "config.wsgi.application"
+
+
+# django rest framework
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 
 DATABASES = {
