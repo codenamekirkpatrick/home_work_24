@@ -8,8 +8,8 @@ app_name = UsersConfig.name
 
 
 router = SimpleRouter()
-router.register("users", UserViewSet)
-router.register("payments", PaymentViewSet)
+router.register("users", UserViewSet, basename="users")
+router.register("payments", PaymentViewSet, basename="payments")
 
 urlpatterns = []
 
