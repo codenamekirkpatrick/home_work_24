@@ -26,18 +26,13 @@ class CourseDetailSerializer(ModelSerializer):
     """Сериализатор для добавления количества уроков одного курса"""
 
     lessons_count = SerializerMethodField()
-    lessons = LessonSerializer(many=True, read_only=True, source="lesson_set")
+    lessons = LessonSerializer(many=True, read_only=True)
 
     def get_lessons_count(self, course):
         return Lesson.objects.filter(course=course).count()
 
     class Meta:
-        model = Lesson
-        fields = (
-            "name",
-            "description",
-            "preview",
-            "course",
-            "lessons_count",
-            "lessons",
-        )
+        model = Course
+        fields = "__all__"
+
+

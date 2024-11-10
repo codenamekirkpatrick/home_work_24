@@ -6,10 +6,15 @@ from users.models import User, Payment
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     search_fields = (
+        "id",
         "name",
         "preview",
         "description",
         "owner",
+    )
+    list_display = (
+        "id",
+        "name",
     )
 
 
