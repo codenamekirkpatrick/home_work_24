@@ -36,27 +36,23 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
 
 
-from lms.models import Course, Lesson
-
 
 class Payment(models.Model):
     """Модель платежей"""
 
-    user = models.ForeignKey(
-        User,
+    user = models.ForeignKey("users.User",
         on_delete=models.CASCADE,
         verbose_name="Кто произвел оплату",
         related_name="payment",
     )
     date = models.DateField(verbose_name="Дата оплаты", **NULLABLE)
-    course = models.ForeignKey(
-        Course,
+    course = models.ForeignKey("lms.Course",
         on_delete=models.CASCADE,
         verbose_name="Оплаченный курс",
         related_name="payment",
     )
     lesson = models.ForeignKey(
-        Lesson,
+        "lms.Lesson",
         on_delete=models.CASCADE,
         verbose_name="Оплаченный урок",
         related_name="payment",
