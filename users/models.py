@@ -36,17 +36,18 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
 
 
-
 class Payment(models.Model):
     """Модель платежей"""
 
-    user = models.ForeignKey("users.User",
+    user = models.ForeignKey(
+        "users.User",
         on_delete=models.CASCADE,
         verbose_name="Кто произвел оплату",
         related_name="payment",
     )
     date = models.DateField(verbose_name="Дата оплаты", **NULLABLE)
-    course = models.ForeignKey("lms.Course",
+    course = models.ForeignKey(
+        "lms.Course",
         on_delete=models.CASCADE,
         verbose_name="Оплаченный курс",
         related_name="payment",

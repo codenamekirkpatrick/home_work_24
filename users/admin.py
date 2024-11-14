@@ -1,6 +1,7 @@
 from django.contrib import admin
+
 from lms.models import Course, Lesson
-from users.models import User, Payment
+from users.models import Payment, User
 
 
 @admin.register(Course)
@@ -35,6 +36,7 @@ class LessonAdmin(admin.ModelAdmin):
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     search_fields = (
+        "id",
         "email",
         "phone",
         "city",
