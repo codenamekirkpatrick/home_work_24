@@ -2,9 +2,16 @@ from django.urls import path
 from rest_framework.routers import SimpleRouter
 
 from lms.apps import LmsConfig
-from lms.views import (CourseViewSet, LessonCreateApiView,
-                       LessonDestroyAPIView, LessonListAPIView,
-                       LessonRetrieveAPIView, LessonUpdateAPIView)
+from lms.views import (
+    CourseViewSet,
+    LessonCreateApiView,
+    LessonDestroyAPIView,
+    LessonListAPIView,
+    LessonRetrieveAPIView,
+    LessonUpdateAPIView,
+    SubscriptionCreateAPIView,
+    SubscriptionListAPIView,
+)
 
 app_name = LmsConfig.name
 
@@ -12,21 +19,27 @@ router = SimpleRouter()
 router.register("course", CourseViewSet, basename="course")
 
 urlpatterns = [
-    path("lessons/", LessonListAPIView.as_view(), name="lesson_list"),
-    path("lessons/create/", LessonCreateApiView.as_view(), name="lesson_create"),
+    path("lessons/", LessonListAPIView.as_view(), name="lesson-list"),
+    path("lessons/create/", LessonCreateApiView.as_view(), name="lesson-create"),
     path(
         "lessons/<int:pk>/retrieve/",
         LessonRetrieveAPIView.as_view(),
-        name="lesson_retrieve",
+        name="lesson-retrieve",
     ),
     path(
-        "lessons/<int:pk>/update/", LessonUpdateAPIView.as_view(), name="lesson_update"
+        "lessons/<int:pk>/update/", LessonUpdateAPIView.as_view(), name="lesson-update"
     ),
     path(
         "lessons/<int:pk>/destroy/",
         LessonDestroyAPIView.as_view(),
-        name="lesson_destroy",
+        name="lesson-destroy",
     ),
+    path(
+        "subscription/create/",
+        SubscriptionCreateAPIView.as_view(),
+        name="subscription-create",
+    ),
+    path("subscription/", SubscriptionListAPIView.as_view(), name="subscriptions"),
 ]
 
 urlpatterns += router.urls

@@ -1,18 +1,28 @@
-from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     ListAPIView, RetrieveAPIView,
-                                     UpdateAPIView)
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-
-from lms.models import Course, Lesson
-from lms.serializers import (CourseDetailSerializer, CourseSerializer,
-                             LessonSerializer)
+from django.shortcuts import get_object_or_404
+from lms.models import Course, Lesson, Subscription
+from lms.serializers import (
+    CourseDetailSerializer,
+    CourseSerializer,
+    LessonSerializer,
+    SubscriptionSerializer,
+)
 from users.permissions import IsModer, IsOwner
+from rest_framework.response import Response
+from lms.paginations import CustomPagination
 
 
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
-
+    pagination_class = CustomPagination
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -50,6 +60,7 @@ class LessonCreateApiView(CreateAPIView):
 class LessonListAPIView(ListAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
+    pagination_class = CustomPagination
 
 
 class LessonRetrieveAPIView(RetrieveAPIView):
@@ -68,3 +79,34 @@ class LessonDestroyAPIView(DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsOwner | ~IsModer]
+
+
+class SubscriptionCreateAPIView(CreateAPIView):
+    """Эндпоинт на создание и удаление подписки"""
+
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
+
+    def post(self, request, *args, **kwargs):
+        """Реализация создания и удаления подписки через метод post"""
+        user = self.request.user
+        # id курса, которое передал пользователь
+        course_id = self.request.data.get("course")
+        # сущность курса, все данные по курсу, который запросил пользователь
+        course_item = get_object_or_404(Course, pk=course_id)
+        # queryset на сущность подписки фильтр по вошедшему пользователю и курсу
+        subs_item = Subscription.objects.filter(course=course_item, user=user)
+
+        if subs_item.exists():  #  если такая подписка существует то удаляем
+            subs_item.delete()
+            message = "Подписка удалена"
+        else:  #  иначе создаем
+            Subscription.objects.create(course=course_item, user=user)
+            message = "Подписка создана"
+
+        return Response({"message": message})
+
+
+class SubscriptionListAPIView(ListAPIView):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
