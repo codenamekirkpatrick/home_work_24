@@ -65,6 +65,18 @@ class Payment(models.Model):
     method = models.CharField(
         choices=PAYMENT_METHOD, default=CASH, verbose_name="Способ оплаты"
     )
+    session_id = models.CharField(
+        max_length=255,
+        **NULLABLE,
+        verbose_name="ID сессии",
+        help_text="Укажите ID сессии Stripe",
+    )
+    link = models.URLField(
+        max_length=400,
+        **NULLABLE,
+        verbose_name="Ссылка на оплату",
+        help_text="Укажите ссылку на оплату",
+    )
 
     def __str__(self):
         return f"{self.amount} {self.method}"
@@ -72,3 +84,7 @@ class Payment(models.Model):
     class Meta:
         verbose_name = "Платеж"
         verbose_name_plural = "Платежи"
+
+
+
+

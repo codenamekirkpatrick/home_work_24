@@ -81,6 +81,8 @@ class LessonDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwner | ~IsModer]
 
 
+
+
 class SubscriptionCreateAPIView(CreateAPIView):
     """Эндпоинт на создание и удаление подписки"""
 
