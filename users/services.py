@@ -3,6 +3,7 @@ from forex_python.converter import CurrencyRates
 
 from config.settings import STRIPE_API_KEY
 
+
 stripe.api_key = STRIPE_API_KEY
 
 def create_stripe_product(prod):
@@ -19,12 +20,12 @@ def convert_rub_to_dollars(amount):
     return int(amount * rate)
 
 
-def create_stripe_price(amount):
+def create_stripe_price(amount, product_id):
     """Создает цену в Stripe."""
     return stripe.Price.create(
         currency="RUB",
         unit_amount=amount * 100,
-        product_data={"name": "Payment"},
+        product_data={"name": product_id},
     )
 
 

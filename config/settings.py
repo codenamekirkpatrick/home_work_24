@@ -121,4 +121,4 @@ SIMPLE_JWT = {
 }
 
 
-STRIPE_API_KEY = os.getenv("STRIPE_API_KEY"),
+STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
