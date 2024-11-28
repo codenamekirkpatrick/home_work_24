@@ -18,6 +18,7 @@ from lms.serializers import (
 from users.permissions import IsModer, IsOwner
 from rest_framework.response import Response
 from lms.paginations import CustomPagination
+from lms.tasks import mailing_about_updates
 
 
 class CourseViewSet(ModelViewSet):
@@ -31,9 +32,9 @@ class CourseViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.action == "create":
-            self.permission_classes = (~IsModer,)
+            self.permission_classes = (~IsAuthenticated,)
         elif self.action in ["retrieve", "update"]:
-            self.permission_classes = (IsModer | IsOwner,)
+            self.permission_classes = (IsAuthenticated | IsOwner,)
         elif self.action == "destroy":
             self.permission_classes = (~IsModer | IsOwner,)
         return super().get_permissions()
@@ -43,6 +44,12 @@ class CourseViewSet(ModelViewSet):
         course = serializer.save()
         course.owner = self.request.user
         course.save()
+
+
+    def perform_update(self, serializer):
+        course = serializer.save()
+        mailing_about_updates.delay(course.pk)
+
 
 
 class LessonCreateApiView(CreateAPIView):

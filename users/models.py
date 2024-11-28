@@ -24,7 +24,12 @@ class User(AbstractUser):
         **NULLABLE,
         help_text="Загрузите фото",
     )
-
+    last_login = models.DateTimeField(
+        auto_now_add=True, **NULLABLE, verbose_name="Дата последнего входа"
+    )
+    is_active = models.BooleanField(
+        default=False, **NULLABLE, verbose_name="Статус активности"
+    )
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
