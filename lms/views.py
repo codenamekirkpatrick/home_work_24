@@ -18,7 +18,7 @@ from lms.serializers import (
 from users.permissions import IsModer, IsOwner
 from rest_framework.response import Response
 from lms.paginations import CustomPagination
-from lms.tasks import mailing_about_updates
+from lms.tasks import mailing
 
 
 class CourseViewSet(ModelViewSet):
@@ -45,12 +45,10 @@ class CourseViewSet(ModelViewSet):
         course.owner = self.request.user
         course.save()
 
-
     def perform_update(self, serializer):
-        course = serializer.save()
-        mailing_about_updates.delay(course.pk)
-
-
+        serializer.save()
+        course_pk = self.get_object().pk
+        mailing.delay(course_pk)
 
 class LessonCreateApiView(CreateAPIView):
     queryset = Lesson.objects.all()
