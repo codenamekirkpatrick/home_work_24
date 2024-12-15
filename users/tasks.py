@@ -1,18 +1,15 @@
 from celery import shared_task
-from datetime import timedelta, date
+from datetime import timezone
 from users.models import User
-
+from dateutil.relativedelta import relativedelta
 
 @shared_task
-def check_last_login():
+def check_last_login() -> None:
     """
-    Проверяет и деактивирует пользователей, которые не заходили в систему в течение 30 дней.
+    Проверяет и деактивирует пользователей,
+    которые не заходили в систему в течение 1 месяца
+    и делает их аккаунт неактивным.
     """
-    users = User.objects.filter(is_active=True, is_staff=False, is_superuser=False, last_login__isnull=False)
-    date_delta = timedelta(30)
-    for user in users:
-        date_block = date.today() - date_delta
-        if user.last_login <= date_block:
-            print("Пользователь не активен")
-            user.is_active = False
-            user.save()
+    month_ago = timezone.now() - relativedelta(months=1)
+    users = User.objects.filter(last_login__lte=month_ago, is_active=True)
+    users.update(is_active=False)
